@@ -20,17 +20,20 @@ function check (array $board, array $payLines, array $slotValue){
     foreach ($slotValue as $slot){
         foreach ($payLines as $pay){
             $result=0;
+            $counter=0;
             foreach ($pay as $position){
                 [$x, $y]=$position;
-                if($board[$x][$y]===$slot){
+                if($board[$x][$y]===$slot && $counter===$result){
                     $result++;
+                    $counter++;
+                }else{
+                    $counter++;
                 }
             }
-            if($result===count($board[0])) {
-                return [true, $slot];
+            if($result===3 || $result===4 || $result===5) {
+                return [true, $slot, $result];
             }
         }
-
     }
 }
 
@@ -96,14 +99,14 @@ do {
     if ($str === "Y" && $cost * $spinNumber <= $startCapital) {
         $spinNumber++;
         $newBoard = boardFill($board, $slotValue);
-        [$x, $y] = check($newBoard, $payLines, $slotValue);
+        [$x, $y, $z] = check($newBoard, $payLines, $slotValue);
         $value=0;
         if ($x) {
             echo 'Congratulations, you win' . PHP_EOL;
             foreach ($slotCoeficient as $key => $value) {
                 if ($key === $y) {
-                    $winingSum += $value * 50;
-                    echo 'Your win is ' . $value * 50;
+                    $winingSum += $value * 20*$z;
+                    echo 'Your win is ' . $value * 20*$z;
                     echo PHP_EOL;
                     echo "All your win is {$winingSum}" . PHP_EOL;
                     echo "Your cash is equal to " . $startCapital - ($spinNumber-1) * $cost;
